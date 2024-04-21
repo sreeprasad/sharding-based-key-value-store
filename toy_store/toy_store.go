@@ -1,4 +1,4 @@
-package sp_airlines
+package toy_store
 
 import (
 	"database/sql"
@@ -17,6 +17,10 @@ type ToyStoreRecord struct {
 
 type ToyStore struct {
 	db *sql.DB
+}
+
+func NewToyStore(db *sql.DB) *ToyStore {
+	return &ToyStore{db: db}
 }
 
 func (toystore *ToyStore) Set(key string, value string, expiredAt time.Time) (bool, error) {
