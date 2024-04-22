@@ -29,4 +29,4 @@ This is same as https://github.com/sreeprasad/toy-key-value-store
 except that now keys are stored in 2 database shards based on
 hash of key mod 2
 
-![sharded toy store](screenshots/sharded_toy_store.mp4)
+![sharded toy store](screenshots/sharded_toy_store.jpg)
