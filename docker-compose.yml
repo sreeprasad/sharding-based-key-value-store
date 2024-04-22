@@ -4,7 +4,7 @@ services:
   db1:
     image: postgres:latest
     environment:
-      POSTGRES_DB: mydatabase4
+      POSTGRES_DB: mydatabase4_1
       POSTGRES_USER: user4
       POSTGRES_PASSWORD: password4
     ports:
@@ -12,7 +12,20 @@ services:
     volumes:
       - db1_data:/var/lib/postgresql/data
       - ./postgres-init/01-create_role.sh:/docker-entrypoint-initdb.d/01-create_role.sh
-      - ./postgres-init/02_toy_key_values_schema.sh:/docker-entrypoint-initdb.d/02_toy_key_values_schema.sh
+      - ./postgres-init/02_db1_toy_key_values_schema.sh:/docker-entrypoint-initdb.d/02_db1_toy_key_values_schema.sh
+
+  db2:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: mydatabase4_2
+      POSTGRES_USER: user4
+      POSTGRES_PASSWORD: password4
+    ports:
+      - "5436:5432"
+    volumes:
+      - db2_data:/var/lib/postgresql/data
+      - ./postgres-init/01-create_role.sh:/docker-entrypoint-initdb.d/01-create_role.sh
+      - ./postgres-init/02_db2_toy_key_values_schema.sh:/docker-entrypoint-initdb.d/02_db2_toy_key_values_schema.sh
 
   pgbouncer:
     image: edoburu/pgbouncer
@@ -23,6 +36,8 @@ services:
       - "6432:5432"
     depends_on:
       - db1
+      - db2
 
 volumes:
   db1_data:
+  db2_data:

@@ -3,7 +3,7 @@ set -e
 
 echo "creating schema"
 
-psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "mydatabase4" <<-EOSQL
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "mydatabase4_2" <<-EOSQL
 
     CREATE TABLE IF NOT EXISTS public.toy_dynamo (
         id SERIAL PRIMARY KEY,
