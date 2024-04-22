@@ -26,11 +26,13 @@ func main() {
 
 	http.HandleFunc("/set", handleSet)
 	http.HandleFunc("/get", handleGet)
+	http.HandleFunc("/delete", handleDelete)
 
 	fmt.Println("Starting server at port 8080")
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
+
 }
 
 type SetRequest struct {
@@ -40,6 +42,7 @@ type SetRequest struct {
 }
 
 func handleSet(w http.ResponseWriter, r *http.Request) {
+
 	var req SetRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
@@ -57,6 +60,7 @@ func handleSet(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
+
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
 }
@@ -76,5 +80,20 @@ func handleGet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Fprintf(w, "Value: %s, ExpiredAt: %v", toyStoreRecord.Value, toyStoreRecord.ExpiredAt)
+}
 
+func handleDelete(w http.ResponseWriter, r *http.Request) {
+
+	key := r.URL.Query().Get("key")
+	if key == "" {
+		http.Error(w, "Missing key", http.StatusBadRequest)
+		return
+	}
+
+	_, err := toyStore.Delete(key)
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+	fmt.Fprintf(w, "Key:%s deleted", key)
 }

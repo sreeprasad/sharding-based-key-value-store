@@ -57,3 +57,18 @@ func (toystore *ToyStore) Get(key string) (ToyStoreRecord, error) {
 	}
 	return record, nil
 }
+
+func (toystore *ToyStore) Delete(key string) (bool, error) {
+
+	sqlStatement := `
+	UPDATE toy_dynamo set expired_at = TIMESTAMP '1970-01-01 00:00:00' where key = $1 
+	and expired_at > NOW();
+	`
+	_, err := toystore.db.Exec(sqlStatement, key)
+	if err != nil {
+		log.Printf("Failed to delete record for key:%s due to error: %v", key, err)
+		return false, err
+	}
+	return true, nil
+
+}
