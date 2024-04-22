@@ -9,7 +9,7 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "mydatabase4" <<-EO
         id SERIAL PRIMARY KEY,
         key VARCHAR(255) NOT NULL UNIQUE,
         value TEXT NOT NULL,
-        expired_at timestamp NOT NULL,
+        expired_at timestamp NOT NULL
     );
 
     CREATE INDEX IF NOT EXISTS idx_toy_dynamo_expired_at ON public.toy_dynamo(expired_at);

@@ -10,9 +10,9 @@ import (
 
 type ToyStoreRecord struct {
 	ID        uint
-	key       string
-	value     string
-	expiredAt time.Time
+	Key       string
+	Value     string
+	ExpiredAt time.Time
 }
 
 type ToyStore struct {
@@ -46,11 +46,11 @@ func (toystore *ToyStore) Get(key string) (ToyStoreRecord, error) {
 	WHERE key = $1 AND expired_at > NOW()`
 
 	var record ToyStoreRecord
-	err := toystore.db.QueryRow(sqlStatement, key).Scan(&record.key, &record.value, &record.expiredAt)
+	err := toystore.db.QueryRow(sqlStatement, key).Scan(&record.ID, &record.Key, &record.Value, &record.ExpiredAt)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			log.Printf("No record found for key: %v", key)
-			return ToyStoreRecord{}, err
+			return ToyStoreRecord{}, nil
 		}
 		log.Printf("Failed to retrieve record: %v", err)
 		return ToyStoreRecord{}, err
