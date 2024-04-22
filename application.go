@@ -14,15 +14,24 @@ var toyStore *toy_store.ToyStore
 
 func main() {
 
-	connStr := "host=localhost port=6432 user=user4 dbname=mydatabase4 password=password4 sslmode=disable"
-	db, err := sql.Open("postgres", connStr)
-
-	toyStore = toy_store.NewToyStore(db)
+	db1ConnStr := "host=localhost port=6432 user=user4 dbname=mydatabase4_1 password=password4 sslmode=disable"
+	db1, err := sql.Open("postgres", db1ConnStr)
 
 	if err != nil {
 		log.Fatalf("Error opening database: %v", err)
 	}
-	defer db.Close()
+
+	db2ConnStr := "host=localhost port=6432 user=user4 dbname=mydatabase4_2 password=password4 sslmode=disable"
+	db2, err := sql.Open("postgres", db2ConnStr)
+
+	if err != nil {
+		log.Fatalf("Error opening database: %v", err)
+	}
+
+	toyStore = toy_store.NewToyStore(db1, db2)
+
+	defer db1.Close()
+	defer db2.Close()
 
 	http.HandleFunc("/set", handleSet)
 	http.HandleFunc("/get", handleGet)
